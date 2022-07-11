@@ -18,7 +18,7 @@ struct AuthBody {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-struct GithubUser {
+struct Form {
     id: Option<String>,
     email: Option<String>,
     verified_email: Option<bool>,
@@ -111,7 +111,7 @@ async fn get_access_token(code: &str) -> Result<OAuthAccessBody, String> {
     }
 }
 
-async fn get_authed_user(access_token: &str) -> Result<GithubUser, String> {
+async fn get_authed_user(access_token: &str) -> Result<Form, String> {
     let Bearer = format!("Bearer {}", access_token);
     let response = new_http_client()
         .get("https://www.googleapis.com/oauth2/v1/userinfo")
@@ -120,7 +120,7 @@ async fn get_authed_user(access_token: &str) -> Result<GithubUser, String> {
         .await;
     println!("{:?}", response);
     match response {
-        Ok(res) => match res.json::<GithubUser>().await {
+        Ok(res) => match res.json::<Form>().await {
             Ok(body) => Ok(body),
             Err(_) => Err("Failed to get user's profile".to_string()),
         },
@@ -134,7 +134,7 @@ async fn get_authed_user(access_token: &str) -> Result<GithubUser, String> {
 #[tokio::main]
 async fn main() {
     let app = Router::new().route("/auth", get(auth));
-    let port = env::var("PORT").unwrap_or_else(|_| "8091".to_string());
+    let port = env::var("PORT").unwrap_or_else(|_| "8090".to_string());
     let port: u16 = port.parse::<u16>().unwrap();
     let addr = SocketAddr::from(([127, 0, 0, 1], port));
     axum::Server::bind(&addr)
