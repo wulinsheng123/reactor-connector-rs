@@ -1,9 +1,11 @@
 [workspace]
 members = [
-	"rsa-generator",
-	"github",
-	"slack",
-	"sendgrid",
-	"twitter",
-	"googleform"
+  "rsa-generator",
+  "github",
+  "slack",
+  "slack/wasm",
+  "sendgrid",
+  "sendgrid/wasm",
+  "twitter",
+  "googleform",
 ]
